@@ -6,29 +6,30 @@ class Connection:
 
     def __init__(self) -> None:
         self.__socket = socket(AF_INET, SOCK_STREAM)
-        self.connected: bool = False
+        self.__connected: bool = False
     
     def connect(self, host: str, port: int):
         try:
             self.__socket.connect((host,port))
-            self.connected =  True
+            self.__connected =  True
         except:
-            self.connected =  False
-        return self.connected
+            self.__connected =  False
+        return self.__connected
 
     def disconnect(self):
         if self.__socket:
             self.__socket.close()
+        self.__connected = False
 
     def write(self, data: str):
-        if self.connected:
+        if self.__connected:
             data = str(data).encode()
             return self.__socket.send(data)
         return -1
     
     def read(self):
         data = b''
-        if self.connected:
+        if self.__connected:
             rcv = 1
             while rcv:
                 rcv = self.__socket.recv(2048)
